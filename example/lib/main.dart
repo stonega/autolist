@@ -33,8 +33,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addItem() {
     setState(() {
-      final newIdx = math.Random().nextInt(_items.length + 1);
+      // final newIdx = math.Random().nextInt(_items.length + 1);
+      final newIdx = 0;
       final newValue = math.Random().nextInt(10000);
+      _items.insert(newIdx, newValue);
+      _items.insert(newIdx, newValue);
+      _items.insert(newIdx, newValue);
       _items.insert(newIdx, newValue);
     });
   }

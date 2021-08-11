@@ -10,9 +10,9 @@ class ScaleThenSlideTransition extends StatelessWidget {
   final Widget child;
 
   const ScaleThenSlideTransition({
-    Key key,
-    @required this.animation,
-    @required this.child,
+    Key? key,
+    required this.animation,
+    required this.child,
   }) : super(key: key);
 
   @override
