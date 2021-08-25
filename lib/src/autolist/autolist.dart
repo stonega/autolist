@@ -30,6 +30,8 @@ typedef Widget AutoListItemBuilder<T>(
 
 typedef dynamic CompareOn<T>(T elem);
 
+typedef OnloadCallback = Future<void> Function();
+
 /// An AutoList widget takes a list of items and turns them into a fully
 /// animated list view, automatically managing insertions and deletions.
 @immutable
@@ -42,7 +44,7 @@ class AutoList<T> extends StatefulWidget {
   final CompareOn<T> compareOn;
 
   final padding;
-  final Future? onLoadMore;
+  final OnloadCallback? onLoadMore;
 
   final String? loadLabel;
   final Widget? loadingWidget;
@@ -197,7 +199,7 @@ class _AutoListState<T> extends State<AutoList<T>> {
     await Future.delayed(Duration(seconds: 1));
 
     if (widget.onLoadMore != null) {
-      await widget.onLoadMore!;
+      await widget.onLoadMore!();
     }
     if (mounted)
       setState(() {
