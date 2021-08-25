@@ -179,7 +179,9 @@ class _AutoListState<T> extends State<AutoList<T>> {
         ? widget.loadingWidget ??
             SizedBox(height: 10, width: 20, child: LinearProgressIndicator())
         : GestureDetector(
-            onTap: _loadData,
+            onTap: () {
+              _loadData();
+            },
             child: Container(
               height: 50,
               alignment: Alignment.center,
@@ -188,13 +190,15 @@ class _AutoListState<T> extends State<AutoList<T>> {
           );
   }
 
-  _loadData() async {
+  Future _loadData() async {
     setState(() {
       _loading = true;
     });
     await Future.delayed(Duration(seconds: 1));
 
-    if (widget.onLoadMore != null) await widget.onLoadMore!;
+    if (widget.onLoadMore != null) {
+      await widget.onLoadMore!;
+    }
     if (mounted)
       setState(() {
         _loading = false;
