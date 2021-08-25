@@ -167,29 +167,26 @@ class _AutoListState<T> extends State<AutoList<T>> {
       itemBuilder:
           (BuildContext context, int index, Animation<double> animation) {
         if (index == widget.items.length) {
-          return _loadMore();
+          return _loading
+              ? widget.loadingWidget ??
+                  SizedBox(
+                      height: 10, width: 20, child: LinearProgressIndicator())
+              : GestureDetector(
+                  onTap: () {
+                    _loadData();
+                  },
+                  child: Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    child: Text(widget.loadLabel ?? 'Load more'),
+                  ),
+                );
         }
         return this
             .widget
             .builder(context, this.widget.items[index], animation);
       },
     );
-  }
-
-  Widget _loadMore() {
-    return _loading
-        ? widget.loadingWidget ??
-            SizedBox(height: 10, width: 20, child: LinearProgressIndicator())
-        : GestureDetector(
-            onTap: () {
-              _loadData();
-            },
-            child: Container(
-              height: 50,
-              alignment: Alignment.center,
-              child: Text(widget.loadLabel ?? 'Load more'),
-            ),
-          );
   }
 
   Future _loadData() async {
