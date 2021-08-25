@@ -15,10 +15,7 @@ class SizeNoClipTransition extends AnimatedWidget {
     required Animation<double> sizeFactor,
     this.axisAlignment = 0.0,
     this.child,
-  })  : assert(axis != null),
-        assert(sizeFactor != null),
-        assert(axisAlignment != null),
-        super(key: key, listenable: sizeFactor);
+  })  : super(key: key, listenable: sizeFactor);
 
   /// [Axis.horizontal] if [sizeFactor] modifies the width, otherwise
   /// [Axis.vertical].

@@ -1,4 +1,5 @@
 import 'package:autolist/src/transitions/scale_then_slide_transition.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'difference_set.dart';
@@ -41,6 +42,10 @@ class AutoList<T> extends StatefulWidget {
   final CompareOn<T> compareOn;
 
   final padding;
+  final Future? onLoadMore;
+
+  final String? loadLabel;
+  final Widget? loadingWidget;
 
   /// Build an AutoList. Exactly one of [combinedBuilder] and [itemBuilder] is
   /// required.
@@ -58,14 +63,15 @@ class AutoList<T> extends StatefulWidget {
     required this.items,
     required this.duration,
     this.physics,
+    this.onLoadMore,
+    this.loadLabel,
+    this.loadingWidget,
     AutoListCombinedItemBuilder<T>? combinedBuilder,
     AutoListAnimationBuilder? animationBuilder,
     AutoListItemBuilder<T>? itemBuilder,
     CompareOn<T>? compareOn,
     EdgeInsetsGeometry? padding,
-  })  : assert(items != null),
-        assert(duration != null),
-        assert((combinedBuilder != null) ^ (itemBuilder != null)),
+  })  : assert((combinedBuilder != null) ^ (itemBuilder != null)),
         assert(combinedBuilder == null || animationBuilder == null),
         this.compareOn = compareOn ?? ((t) => t),
         this.padding = padding ?? EdgeInsets.zero,
@@ -100,6 +106,7 @@ class _AutoListState<T> extends State<AutoList<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   List<T>? _items;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -154,13 +161,43 @@ class _AutoListState<T> extends State<AutoList<T>> {
       physics: widget.physics,
       padding: widget.padding,
       key: _listKey,
-      initialItemCount: widget.items.length,
+      initialItemCount: widget.items.length + 1,
       itemBuilder:
           (BuildContext context, int index, Animation<double> animation) {
+        if (index == widget.items.length) {
+          return _loadMore();
+        }
         return this
             .widget
             .builder(context, this.widget.items[index], animation);
       },
     );
+  }
+
+  Widget _loadMore() {
+    return _loading
+        ? widget.loadingWidget ??
+            SizedBox(height: 10, width: 20, child: LinearProgressIndicator())
+        : GestureDetector(
+            onTap: _loadData,
+            child: Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Text(widget.loadLabel ?? 'Load more'),
+            ),
+          );
+  }
+
+  _loadData() async {
+    setState(() {
+      _loading = true;
+    });
+    await Future.delayed(Duration(seconds: 1));
+
+    if (widget.onLoadMore != null) await widget.onLoadMore!;
+    if (mounted)
+      setState(() {
+        _loading = false;
+      });
   }
 }
