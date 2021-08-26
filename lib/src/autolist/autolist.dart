@@ -48,6 +48,7 @@ class AutoList<T> extends StatefulWidget {
 
   final String? loadLabel;
   final Widget? loadingWidget;
+  final bool hideLoadMore;
 
   /// Build an AutoList. Exactly one of [combinedBuilder] and [itemBuilder] is
   /// required.
@@ -68,6 +69,7 @@ class AutoList<T> extends StatefulWidget {
     this.onLoadMore,
     this.loadLabel,
     this.loadingWidget,
+    this.hideLoadMore = false,
     AutoListCombinedItemBuilder<T>? combinedBuilder,
     AutoListAnimationBuilder? animationBuilder,
     AutoListItemBuilder<T>? itemBuilder,
@@ -167,6 +169,7 @@ class _AutoListState<T> extends State<AutoList<T>> {
       itemBuilder:
           (BuildContext context, int index, Animation<double> animation) {
         if (index == widget.items.length) {
+          if (widget.hideLoadMore) return Center();
           return _loading
               ? widget.loadingWidget ??
                   SizedBox(
@@ -193,8 +196,6 @@ class _AutoListState<T> extends State<AutoList<T>> {
     setState(() {
       _loading = true;
     });
-    await Future.delayed(Duration(seconds: 1));
-
     if (widget.onLoadMore != null) {
       await widget.onLoadMore!();
     }

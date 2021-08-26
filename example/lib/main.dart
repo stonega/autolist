@@ -62,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: AutoList<int>(
         items: _items,
+        hideLoadMore: true,
         duration: Duration(milliseconds: 400),
         itemBuilder: (context, item) {
           return Row(
