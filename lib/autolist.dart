@@ -11,3 +11,5 @@ export 'src/autolist/autolist.dart';
 export 'src/autolist/adjustment.dart';
 export 'src/autolist/difference_set.dart';
 export 'src/autolist/operation.dart';
+export 'src/autolist/transitions/scale_then_slide_transition.dart;
+export 'src/autolist/transitions/size_no_clip_transition.dart;
